@@ -31,7 +31,14 @@
       in
       {
         packages = {
-          default = self.outputs.packages.${system}.cadquery-env;
+          default = self.outputs.packages.${system}.cq-editor;
+          cq-editor = pkgs.callPackage ./cq-editor (
+            overrides
+            // {
+              inherit (self.outputs.packages.${system}) cadquery qtawesome;
+              inherit (pkgs) qt5;
+            }
+          );
           cadquery-env = python.withPackages (
             ps: [ self.outputs.packages.${system}.cadquery ]
           );
@@ -45,6 +52,17 @@
           nloptpy = pkgs.callPackage ./nloptpy overrides;
           casadipy = pkgs.callPackage ./casadipy overrides;
           multimethod = pkgs.callPackage ./multimethod overrides;
+          qtawesome = pkgs.callPackage ./qtawesome overrides;
+        };
+        apps.default = {
+          type = "app";
+          program = "${self.outputs.packages.${system}.cq-editor}/bin/cq-editor";
+        };
+        devShells.default = pkgs.mkShell {
+          packages = [
+            self.outputs.packages.${system}.cq-editor
+            (python.withPackages (ps: [ self.outputs.packages.${system}.cadquery ]))
+          ];
         };
       }
     );
