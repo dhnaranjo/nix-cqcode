@@ -1,21 +1,18 @@
 {
-  nlopt,
   python3Packages,
-  swig,
+  fetchurl,
 }:
 let
-  inherit (python3Packages) python toPythonModule pythonImportsCheckHook;
+  version = "2.10.0";
 in
-toPythonModule (
-  nlopt.overrideAttrs (prev: {
-    configureFlags = builtins.filter (flag: flag != "--without-python") prev.configureFlags or [ ];
-    buildInputs = prev.buildInputs or [ ] ++ [ swig ];
-    propagatedBuildInputs = prev.propagatedBuildInputs or [ ] ++ [ python3Packages.numpy ];
-    nativeCheckInputs = prev.nativeCheckInputs or [ ] ++ [
-      (python.withPackages (ps: [ ps.numpy ]))
-      pythonImportsCheckHook
-    ];
-    doCheck = true;
-    pythonImportsCheck = [ "nlopt" ];
-  })
-)
+python3Packages.buildPythonPackage {
+  pname = "nlopt";
+  inherit version;
+  format = "wheel";
+  src = fetchurl {
+    url = "https://files.pythonhosted.org/packages/a4/39/76558756c758962fcf2c6f8450384e43a8e65cb8dfbb8a93d40014b09b3a/nlopt-${version}-cp312-cp312-macosx_11_0_arm64.whl";
+    hash = "sha256-Geel3YI+qx0Wek+y89oTl4uZcCnJteYWTTPHR/x+xUI=";
+  };
+  dependencies = [ python3Packages.numpy ];
+  pythonImportsCheck = [ "nlopt" ];
+}

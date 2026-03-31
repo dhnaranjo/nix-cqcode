@@ -2,9 +2,9 @@
   fetchFromGitHub,
   python3Packages,
   casadipy,
+  multimethod,
   nloptpy,
   ocp,
-  buildIpopt ? false,
 }:
 let
   pname = "cadquery";
@@ -13,18 +13,19 @@ let
 in
 buildPythonPackage {
   inherit pname version;
+  pyproject = true;
+  build-system = [ python3Packages.setuptools ];
 
   # fetchPypi doesn't include tests, use GitHub instead
   src = fetchFromGitHub {
     owner = "CadQuery";
     repo = "cadquery";
-    rev = "2.4.0";
+    rev = version;
     hash = "sha256-f/qnq5g4FOiit9WQ7zs0axCJBITcAtqF18txMV97Gb8=";
   };
   dependencies =
     (with python3Packages; [
       ezdxf
-      multimethod
       nptyping
       numpy
       pyparsing
@@ -32,10 +33,12 @@ buildPythonPackage {
       typish
     ])
     ++ [
-      (casadipy.override { inherit buildIpopt; })
+      casadipy
+      multimethod
       nloptpy
       ocp
     ];
+  dontCheckRuntimeDeps = true;
   nativeCheckInputs = with python3Packages; [
     docutils
     ipython

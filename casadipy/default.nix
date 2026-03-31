@@ -1,87 +1,24 @@
 {
   lib,
-  stdenv,
   python3Packages,
-  fetchFromGitHub,
-  cmake,
-  pkg-config,
-  blas,
-  gfortran,
-  ipopt,
-  lapack,
-  metis,
-  mpi,
-  mumps,
-  # scotch, # not packaged for macos
-  swig4,
-  buildIpopt ? false,
+  fetchurl,
 }:
 let
-  inherit (python3Packages) python toPythonModule pythonImportsCheckHook;
-  version = "3.6.4";
+  version = "3.7.2";
 in
-toPythonModule (
-  stdenv.mkDerivation {
-    name = "casadi";
-    nativeBuildInputs = [
-      cmake
-      pkg-config
-    ];
-    buildInputs =
-      [
-        ipopt
-        swig4
-      ]
-      ++ (lib.optionals buildIpopt [
-        blas
-        lapack
-        metis
-        mpi
-        mumps
-        python
-        (ipopt.overrideAttrs (prev: {
-          configureFlags = prev.configureFlags or [ ] ++ [
-            # "--disable-mpiinit"
-            "--with-mumps-cflags='-I${mumps}/include'"
-            "--with-mumps-lflags=-ldmumps"
-          ];
-          preConfigure = ''
-            configureFlagsArray+=("--with-mumps-lflags='-L${mumps}/lib -ldmumps -lmumps_common -lpord -L${metis}/lib -lmetis'")
-          '';
-          buildInputs = prev.buildInputs ++ [
-            metis
-            mpi
-            mumps
-            gfortran
-            # scotch
-          ];
-        }))
-      ]);
-    enableParallelBuilding = true;
-    nativeCheckInputs = [ pythonImportsCheckHook ];
-    propagatedBuildInputs = [ python3Packages.numpy ];
-    cmakeFlags =
-      [
-        "-DWITH_PYTHON=ON"
-        "-DWITH_PYTHON3=ON"
-        "-DPYTHON_PREFIX=${placeholder "out"}/${python.sitePackages}"
-        # Fails with:
-        # Broken paths found in a .pc file! /nix/path/to/lib/pkgconfig/tinyxml2.pc
-        "-DWITH_TINYXML=OFF"
-      ]
-      ++ lib.optionals buildIpopt [
-        "-DWITH_IPOPT=ON"
-        "-DWITH_MUMPS=ON"
-        "-DMUMPS_LIBRARIES=${mumps}/lib"
-      ];
-    src = fetchFromGitHub {
-      "owner" = "casadi";
-      "repo" = "casadi";
-      rev = version;
-      hash = "sha256-BfUpSXbllQUNn5BsBQ+ZmQ15OLOp/QegT8igOxSgukE=";
-    };
-    doCheck = true;
-    pythonImportsCheck = [ "casadi" ];
-  }
-  // lib.mkIf buildIpopt { MUMPS = lib.toString mumps; }
-)
+python3Packages.buildPythonPackage {
+  pname = "casadi";
+  inherit version;
+  format = "wheel";
+  src = fetchurl {
+    url = "https://files.pythonhosted.org/packages/1e/c0/3c4704394a6fd4dfb2123a4fd71ba64a001f340670a3eba45be7a19ac736/casadi-${version}-cp312-none-macosx_11_0_arm64.whl";
+    hash = "sha256-YDM4EjTbgQsiR9FsY1LmeaAJ7ENl0EAI/HaIZuAR7Vg=";
+  };
+  dependencies = [ python3Packages.numpy ];
+  pythonImportsCheck = [ "casadi" ];
+  meta = with lib; {
+    description = "Framework for algorithmic differentiation and numeric optimization";
+    homepage = "https://casadi.org/";
+    license = licenses.lgpl3Plus;
+  };
+}
