@@ -53,6 +53,20 @@
           casadipy = pkgs.callPackage ./casadipy overrides;
           multimethod = pkgs.callPackage ./multimethod overrides;
           qtawesome = pkgs.callPackage ./qtawesome overrides;
+          trianglesolver = pkgs.callPackage ./trianglesolver overrides;
+          py-lib3mf = pkgs.callPackage ./py-lib3mf overrides;
+          ocpsvg = pkgs.callPackage ./ocpsvg (
+            overrides
+            // {
+              inherit (self.outputs.packages.${system}) ocp;
+            }
+          );
+          build123d = pkgs.callPackage ./build123d (
+            overrides
+            // {
+              inherit (self.outputs.packages.${system}) ocp ocpsvg py-lib3mf trianglesolver;
+            }
+          );
         };
         apps.default = {
           type = "app";
@@ -61,7 +75,10 @@
         devShells.default = pkgs.mkShell {
           packages = [
             self.outputs.packages.${system}.cq-editor
-            (python.withPackages (ps: [ self.outputs.packages.${system}.cadquery ]))
+            (python.withPackages (ps: [
+              self.outputs.packages.${system}.cadquery
+              self.outputs.packages.${system}.build123d
+            ]))
           ];
         };
       }
