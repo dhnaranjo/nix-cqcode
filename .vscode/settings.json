@@ -1,0 +1,4 @@
+{
+  "python.defaultInterpreterPath": "${workspaceFolder}/.vscode/python",
+  "python-envs.defaultEnvManager": "ms-python.python:system"
+}

@@ -67,20 +67,42 @@
               inherit (self.outputs.packages.${system}) ocp ocpsvg py-lib3mf trianglesolver;
             }
           );
+          ocp-tessellate = pkgs.callPackage ./ocp-tessellate (
+            overrides
+            // {
+              inherit (self.outputs.packages.${system}) ocp;
+            }
+          );
+          ocp-vscode = pkgs.callPackage ./ocp-vscode (
+            overrides
+            // {
+              inherit (self.outputs.packages.${system}) ocp-tessellate;
+            }
+          );
         };
         apps.default = {
           type = "app";
           program = "${self.outputs.packages.${system}.cq-editor}/bin/cq-editor";
         };
-        devShells.default = pkgs.mkShell {
-          packages = [
-            self.outputs.packages.${system}.cq-editor
-            (python.withPackages (ps: [
+        devShells.default =
+          let
+            pythonEnv = python.withPackages (ps: [
               self.outputs.packages.${system}.cadquery
               self.outputs.packages.${system}.build123d
-            ]))
-          ];
-        };
+              self.outputs.packages.${system}.ocp-vscode
+              ps.pip
+            ]);
+          in
+          pkgs.mkShell {
+            packages = [
+              pythonEnv
+            ];
+            shellHook = ''
+              export PATH="${self.outputs.packages.${system}.cq-editor}/bin:$PATH"
+              mkdir -p .vscode
+              ln -sfn ${pythonEnv}/bin/python .vscode/python
+            '';
+          };
       }
     );
 }
