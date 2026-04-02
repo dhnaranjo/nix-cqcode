@@ -1,6 +1,9 @@
 /.ipynb_checkpoints
 .vscode/python
 
+.claude/
+.direnv/
+
 # FewWord context plugin
 .fewword/scratch/
 .fewword/index/

@@ -31,28 +31,18 @@
       in
       {
         packages = {
-          default = self.outputs.packages.${system}.cq-editor;
-          cq-editor = pkgs.callPackage ./cq-editor (
-            overrides
-            // {
-              inherit (self.outputs.packages.${system}) cadquery qtawesome;
-              inherit (pkgs) qt5;
-            }
-          );
+          default = self.outputs.packages.${system}.cadquery;
           cadquery-env = python.withPackages (
             ps: [ self.outputs.packages.${system}.cadquery ]
           );
           cadquery = pkgs.callPackage ./cadquery (
             overrides
             // {
-              inherit (self.outputs.packages.${system}) casadipy multimethod nloptpy ocp;
+              inherit (self.outputs.packages.${system}) multimethod ocp;
             }
           );
           ocp = pkgs.callPackage ./ocp overrides;
-          nloptpy = pkgs.callPackage ./nloptpy overrides;
-          casadipy = pkgs.callPackage ./casadipy overrides;
           multimethod = pkgs.callPackage ./multimethod overrides;
-          qtawesome = pkgs.callPackage ./qtawesome overrides;
           trianglesolver = pkgs.callPackage ./trianglesolver overrides;
           py-lib3mf = pkgs.callPackage ./py-lib3mf overrides;
           ocpsvg = pkgs.callPackage ./ocpsvg (
@@ -80,10 +70,6 @@
             }
           );
         };
-        apps.default = {
-          type = "app";
-          program = "${self.outputs.packages.${system}.cq-editor}/bin/cq-editor";
-        };
         devShells.default =
           let
             pythonEnv = python.withPackages (ps: [
@@ -98,7 +84,6 @@
               pythonEnv
             ];
             shellHook = ''
-              export PATH="${self.outputs.packages.${system}.cq-editor}/bin:$PATH"
               mkdir -p .vscode
               ln -sfn ${pythonEnv}/bin/python .vscode/python
             '';

@@ -1,9 +1,7 @@
 {
   fetchFromGitHub,
   python3Packages,
-  casadipy,
   multimethod,
-  nloptpy,
   ocp,
 }:
 let
@@ -25,7 +23,9 @@ buildPythonPackage {
   };
   dependencies =
     (with python3Packages; [
+      casadi
       ezdxf
+      nlopt
       nptyping
       numpy
       pyparsing
@@ -33,9 +33,7 @@ buildPythonPackage {
       typish
     ])
     ++ [
-      casadipy
       multimethod
-      nloptpy
       ocp
     ];
   dontCheckRuntimeDeps = true;
