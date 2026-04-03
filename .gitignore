@@ -1,7 +1,9 @@
+result/
+
 /.ipynb_checkpoints
 .vscode/python
 
-.claude/
+.claude/settings.local.json
 .direnv/
 
 # FewWord context plugin
