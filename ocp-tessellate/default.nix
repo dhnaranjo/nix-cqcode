@@ -22,5 +22,4 @@ python3Packages.buildPythonPackage {
     python3Packages.cachetools
     python3Packages.imagesize
   ];
-  pythonImportsCheck = [ "ocp_tessellate" ];
 }

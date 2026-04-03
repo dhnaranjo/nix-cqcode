@@ -32,20 +32,74 @@
       {
         packages = {
           default = self.outputs.packages.${system}.cadquery;
-          cadquery-env = python.withPackages (
-            ps: [ self.outputs.packages.${system}.cadquery ]
-          );
+          cadquery-env = python.buildEnv.override {
+            extraLibs = [ self.outputs.packages.${system}.cadquery ];
+            ignoreCollisions = true;
+          };
           cadquery = pkgs.callPackage ./cadquery (
             overrides
             // {
-              inherit (self.outputs.packages.${system}) multimethod ocp;
+              inherit (self.outputs.packages.${system})
+                multimethod
+                ocp
+                runtype
+                trame
+                trame-vtk
+                trame-components
+                trame-vuetify
+                ;
             }
           );
-          ocp = pkgs.callPackage ./ocp overrides;
+          vtk = pkgs.callPackage ./vtk overrides;
+          ocp = pkgs.callPackage ./ocp (
+            overrides
+            // {
+              inherit (self.outputs.packages.${system}) vtk;
+            }
+          );
           multimethod = pkgs.callPackage ./multimethod overrides;
+          runtype = pkgs.callPackage ./runtype overrides;
+          lib3mf = pkgs.callPackage ./lib3mf overrides;
           trianglesolver = pkgs.callPackage ./trianglesolver overrides;
-          py-lib3mf = pkgs.callPackage ./py-lib3mf overrides;
+          trame-common = pkgs.callPackage ./trame-common overrides;
+          trame-client = pkgs.callPackage ./trame-client (
+            overrides
+            // {
+              inherit (self.outputs.packages.${system}) trame-common;
+            }
+          );
+          trame-server = pkgs.callPackage ./trame-server overrides;
+          trame = pkgs.callPackage ./trame (
+            overrides
+            // {
+              inherit (self.outputs.packages.${system}) trame-server trame-client trame-common;
+            }
+          );
+          trame-vtk = pkgs.callPackage ./trame-vtk (
+            overrides
+            // {
+              inherit (self.outputs.packages.${system}) trame-client;
+            }
+          );
+          trame-components = pkgs.callPackage ./trame-components (
+            overrides
+            // {
+              inherit (self.outputs.packages.${system}) trame-client;
+            }
+          );
+          trame-vuetify = pkgs.callPackage ./trame-vuetify (
+            overrides
+            // {
+              inherit (self.outputs.packages.${system}) trame-client;
+            }
+          );
           ocpsvg = pkgs.callPackage ./ocpsvg (
+            overrides
+            // {
+              inherit (self.outputs.packages.${system}) ocp;
+            }
+          );
+          ocp-gordon = pkgs.callPackage ./ocp-gordon (
             overrides
             // {
               inherit (self.outputs.packages.${system}) ocp;
@@ -54,7 +108,7 @@
           build123d = pkgs.callPackage ./build123d (
             overrides
             // {
-              inherit (self.outputs.packages.${system}) ocp ocpsvg py-lib3mf trianglesolver;
+              inherit (self.outputs.packages.${system}) ocp ocpsvg lib3mf ocp-gordon trianglesolver;
             }
           );
           ocp-tessellate = pkgs.callPackage ./ocp-tessellate (
@@ -72,12 +126,15 @@
         };
         devShells.default =
           let
-            pythonEnv = python.withPackages (ps: [
-              self.outputs.packages.${system}.cadquery
-              self.outputs.packages.${system}.build123d
-              self.outputs.packages.${system}.ocp-vscode
-              ps.pip
-            ]);
+            pythonEnv = python.buildEnv.override {
+              extraLibs = (ps: [
+                self.outputs.packages.${system}.cadquery
+                self.outputs.packages.${system}.build123d
+                self.outputs.packages.${system}.ocp-vscode
+                ps.pip
+              ]) python.pkgs;
+              ignoreCollisions = true;
+            };
           in
           pkgs.mkShell {
             packages = [

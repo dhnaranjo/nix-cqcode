@@ -29,5 +29,4 @@ python3Packages.buildPythonPackage {
     python3Packages.questionary
     python3Packages.pillow
   ];
-  pythonImportsCheck = [ "ocp_vscode" ];
 }

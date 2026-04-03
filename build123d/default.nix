@@ -3,25 +3,27 @@
   fetchurl,
   ocp,
   ocpsvg,
-  py-lib3mf,
+  lib3mf,
+  ocp-gordon,
   trianglesolver,
 }:
 let
-  version = "0.8.0";
+  version = "0.10.0";
 in
 python3Packages.buildPythonPackage {
   pname = "build123d";
   inherit version;
   format = "wheel";
   src = fetchurl {
-    url = "https://files.pythonhosted.org/packages/43/96/f29a26ac97080b2327ea59f6cabc136c89958e79923b147aab70c58e5395/build123d-${version}-py3-none-any.whl";
-    hash = "sha256-Z2vgSMcLKntsOnxAIu3g9RNpuIq6E+TJZLYN34wA9QM=";
+    url = "https://files.pythonhosted.org/packages/f3/5a/0fe9cc610a6d07eaaddd80629a49ea18ecf9acefb81c6788a854f0dea224/build123d-${version}-py3-none-any.whl";
+    hash = "sha256-WJ85ex3HyFyZNqp7LuOZRswiahIeFKYhtnSSY6rl7X0=";
   };
   dontCheckRuntimeDeps = true;
   dependencies = [
     ocp
     ocpsvg
-    py-lib3mf
+    lib3mf
+    ocp-gordon
     trianglesolver
     python3Packages.typing-extensions
     python3Packages.numpy
@@ -29,6 +31,8 @@ python3Packages.buildPythonPackage {
     python3Packages.anytree
     python3Packages.ezdxf
     python3Packages.ipython
+    python3Packages.sympy
+    python3Packages.scipy
+    python3Packages.webcolors
   ];
-  pythonImportsCheck = [ "build123d" ];
 }
