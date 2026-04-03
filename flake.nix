@@ -55,6 +55,7 @@
             overrides
             // {
               inherit (self.outputs.packages.${system}) vtk;
+              inherit (pkgs) darwin;
             }
           );
           multimethod = pkgs.callPackage ./multimethod overrides;
