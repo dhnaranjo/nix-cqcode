@@ -4,7 +4,7 @@
 
 ## What? Why?
 
-I use Nix, I like it. Getting CadQuery working on Nix is pretty complex on x86_64-linux (ref: https://github.com/vinszent/cq-flake) and straight up not possible on Apple Silicon when I started this project (good effort: https://github.com/n8henrie/nix-cadquery). This flake enables creating a cross-platform dev environment for your modeling project that will keep working. That's neat!
+I use Nix, I like it. Getting CadQuery working on Nix is pretty complex on x86_64-linux, thanks [vinszent/cq-flake](https://github.com/vinszent/cq-flake), and straight up not possible on Apple Silicon when I started this project, good effort [n8henrie/nix-cadquery](https://github.com/n8henrie/nix-cadquery). This flake enables creating a cross-platform dev environment for your modeling project that will keep working. That's neat!
 
 ## What it provides
 
@@ -29,7 +29,7 @@ nix develop
 cqcode
 ```
 
-The template creates a `flake.nix` wired to `nix-cqcode` and ignores `.vscode/`.
+The template creates a `flake.nix` wired to `nix-cqcode`.
 
 If you already have your own flake-based project, see `example/teacup/flake.nix` for the minimal manual setup.
 
@@ -39,20 +39,27 @@ If you already have your own flake-based project, see `example/teacup/flake.nix`
 
 It stores VS Code user data in `.vscode/user-data`, separate from your normal user profile.
 
-In the example project, `.vscode/` is ignored.
-
 ## Customization
 
-You can add extra VS Code extensions through `extraExtensions`.
+You can add extra Python packages through `extraPythonPackages`. Those are appended to the default CadQuery shell environment, so users can pull in anything already packaged in Nixpkgs without redefining the whole Python environment:
+
+```nix
+{
+  devShells = nix-cqcode.lib.mkCqShell {
+    extraPythonPackages = { python, packages, ... }: [
+      python.pkgs.numpy
+      python.pkgs.scipy
+      packages.build123d
+    ];
+  };
+}
+```
+
+You can add extra VS Code extensions through `extraExtensions`. Those are passed to the underlying `pkgs.vscode-with-extensions` build; use Nixpkgs/NixOS package sources for extension selection, for example the `vscode-extensions` search: <https://search.nixos.org/packages?channel=unstable&query=vscode-extensions>.
 
 The shell helpers also support `extraPackages` and `shellHook`. Those are just the usual `pkgs.mkShell` knobs, not custom `nix-cqcode` features. See the Nixpkgs manual's development shell helpers section: <https://nixos.org/manual/nixpkgs/stable/#sec-pkgs-mkShell>.
 
 Required VS Code workspace settings are managed by the base flake. On shell entry, those required keys are merged into `.vscode/settings.json`, while any other existing workspace settings are preserved.
-
-## TODO
-
-- Extra Python packages
-- Version upgrade helpers
 
 ## Thanks
 

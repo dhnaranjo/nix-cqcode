@@ -13,6 +13,9 @@
     }:
     {
       devShells = nix-cadquery.lib.mkCqShell {
+        extraPythonPackages = { python, ... }: [
+          python.pkgs.numpy
+        ];
         extraExtensions = { pkgs, ... }: [
           pkgs.vscode-extensions.jnoortheen.nix-ide
         ];

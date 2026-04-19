@@ -64,23 +64,24 @@
               '';
             mkWorkspaceShell =
               {
-                pythonLibs ? (
-                  ps: [
-                    packages.cadquery
-                    packages.ocp-vscode
-                    ps.pip
-                  ]
-                ),
+                extraPythonPackages ? [ ],
                 extraExtensions ? [ ],
                 editorPackage ? mkCqcode { inherit extraExtensions; },
                 extraPackages ? [ ],
                 shellHook ? "",
               }:
               let
+                basePythonPackages =
+                  ps: [
+                    packages.cadquery
+                    packages.ocp-vscode
+                    ps.pip
+                  ];
+                resolvedExtraPythonPackages = resolveShellValue extraPythonPackages;
                 resolvedEditorPackage = resolveShellValue editorPackage;
                 resolvedExtraPackages = resolveShellValue extraPackages;
                 resolvedShellHook = resolveShellValue shellHook;
-                pythonEnv = mkPythonEnv pythonLibs;
+                pythonEnv = mkPythonEnv (ps: basePythonPackages ps ++ resolvedExtraPythonPackages);
                 workspaceSettings = pkgs.writeText "settings.json" (
                   builtins.toJSON {
                     "python.defaultInterpreterPath" = "${pythonEnv}/bin/python";
