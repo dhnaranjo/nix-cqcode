@@ -14,8 +14,8 @@ let
 
     ocp = self.callPackage ./ocp (
       overrides
-      // {
-        inherit (pkgs) darwin;
+      // pkgs.lib.optionalAttrs pkgs.stdenv.isDarwin {
+        inherit (pkgs.darwin) autoSignDarwinBinariesHook;
       }
     );
 
