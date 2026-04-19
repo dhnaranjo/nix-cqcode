@@ -61,6 +61,10 @@ The shell helpers also support `extraPackages` and `shellHook`. Those are just t
 
 Required VS Code workspace settings are managed by the base flake. On shell entry, those required keys are merged into `.vscode/settings.json`, while any other existing workspace settings are preserved.
 
+## License
+
+MIT. See [LICENSE](LICENSE).
+
 ## Thanks
 
 This repo was initially cloned from [n8henrie/nix-cadquery](https://github.com/n8henrie/nix-cadquery). Good lookin' out.
