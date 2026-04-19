@@ -45,7 +45,7 @@ In the example project, `.vscode/` is ignored.
 
 You can add extra VS Code extensions through `extraExtensions`.
 
-The shell helpers also support extra packages and shell hooks.
+The shell helpers also support `extraPackages` and `shellHook`. Those are just the usual `pkgs.mkShell` knobs, not custom `nix-cqcode` features. See the Nixpkgs manual's development shell helpers section: <https://nixos.org/manual/nixpkgs/stable/#sec-pkgs-mkShell>.
 
 Required VS Code workspace settings are managed by the base flake. On shell entry, those required keys are merged into `.vscode/settings.json`, while any other existing workspace settings are preserved.
 
