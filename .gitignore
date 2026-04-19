@@ -1,7 +1,7 @@
 result
 
 /.ipynb_checkpoints
-.vscode/python
+.vscode/
 
 .claude/settings.local.json
 .direnv/

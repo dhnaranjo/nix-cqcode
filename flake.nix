@@ -141,10 +141,6 @@
             packages = [
               pythonEnv
             ];
-            shellHook = ''
-              mkdir -p .vscode
-              ln -sfn ${pythonEnv}/bin/python .vscode/python
-            '';
           };
       }
     );
