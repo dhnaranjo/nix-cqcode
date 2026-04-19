@@ -50,7 +50,13 @@
                 };
               in
               pkgs.writeShellScriptBin "cqcode" ''
-                exec ${vscodeWithExtensions}/bin/code "$@"
+                project_root="$PWD"
+                user_data_dir="$project_root/.vscode/user-data"
+                mkdir -p "$user_data_dir"
+
+                exec ${vscodeWithExtensions}/bin/code \
+                  --user-data-dir "$user_data_dir" \
+                  "$@"
               '';
             mkWorkspaceShell =
               {
@@ -87,8 +93,8 @@
                   resolvedEditorPackage
                 ] ++ resolvedExtraPackages;
                 shellHook = ''
-                  mkdir -p .vscode
-                  [ -e .vscode/settings.json ] || cp ${workspaceSettings} .vscode/settings.json
+                  mkdir -p .vscode/user-data/User
+                  [ -e .vscode/user-data/User/settings.json ] || cp ${workspaceSettings} .vscode/user-data/User/settings.json
                   chmod -R u+w .vscode
                 '' + resolvedShellHook;
               };
