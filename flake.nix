@@ -191,6 +191,7 @@
           Initialized a CadQuery project template.
 
           Run `nix develop`, then launch the editor with `cqcode`.
+          Open `models/cube.py` and run it to view the starter cube in OCP CAD Viewer.
         '';
       };
     };

@@ -36,8 +36,18 @@ cqcode
 ```
 
 The template creates a `flake.nix` wired to `nix-cqcode`.
+It also adds `models/cube.py`, a minimal CadQuery cube wired for the VS Code OCP CAD Viewer.
 
 If you already have your own flake-based project, see `example/teacup/flake.nix` for the minimal manual setup.
+
+To preview the starter model:
+
+```sh
+nix develop
+cqcode
+```
+
+Then open `models/cube.py` in VS Code and run the file. The `show_object(...)` call will display the cube in the OCP CAD Viewer panel.
 
 ## Editor behavior
 
