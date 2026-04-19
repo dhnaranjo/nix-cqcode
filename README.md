@@ -45,7 +45,9 @@ In the example project, `.vscode/` is ignored.
 
 You can add extra VS Code extensions through `extraExtensions`.
 
-The shell helpers also support extra packages, shell hooks, and settings.
+The shell helpers also support extra packages and shell hooks.
+
+Required VS Code workspace settings are managed by the base flake. On shell entry, those required keys are merged into `.vscode/settings.json`, while any other existing workspace settings are preserved.
 
 ## TODO
 

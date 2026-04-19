@@ -74,17 +74,15 @@
                 extraExtensions ? [ ],
                 editorPackage ? mkCqcode { inherit extraExtensions; },
                 extraPackages ? [ ],
-                settings ? { },
                 shellHook ? "",
               }:
               let
                 resolvedEditorPackage = resolveShellValue editorPackage;
                 resolvedExtraPackages = resolveShellValue extraPackages;
-                resolvedSettings = resolveShellValue settings;
                 resolvedShellHook = resolveShellValue shellHook;
                 pythonEnv = mkPythonEnv pythonLibs;
-                workspaceSettings = pkgs.writeText "settings.json" (builtins.toJSON (
-                  {
+                workspaceSettings = pkgs.writeText "settings.json" (
+                  builtins.toJSON {
                     "python.defaultInterpreterPath" = "${pythonEnv}/bin/python";
                     "python.useEnvironmentsExtension" = false;
                     "terminal.integrated.defaultProfile.linux" = "nix-cqcode bash";
@@ -102,8 +100,7 @@
                       };
                     };
                   }
-                  // resolvedSettings
-                ));
+                );
               in
               pkgs.mkShell {
                 packages = [
@@ -112,7 +109,13 @@
                 ] ++ resolvedExtraPackages;
                 shellHook = ''
                   mkdir -p .vscode/user-data/User
-                  [ -e .vscode/settings.json ] || cp ${workspaceSettings} .vscode/settings.json
+                  if [ -e .vscode/settings.json ]; then
+                    tmp_settings="$(mktemp)"
+                    ${pkgs.jq}/bin/jq -s '.[0] * .[1]' .vscode/settings.json ${workspaceSettings} > "$tmp_settings"
+                    mv "$tmp_settings" .vscode/settings.json
+                  else
+                    cp ${workspaceSettings} .vscode/settings.json
+                  fi
                   chmod -R u+w .vscode
                   echo "Use 'cqcode' to launch VS Code with the CadQuery setup."
                 '' + resolvedShellHook;
