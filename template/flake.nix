@@ -2,6 +2,8 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs";
     nix-cqcode.url = "github:dhnaranjo/nix-cqcode";
+    # Uncomment and replace FAKECOMMIT with the nix-cqcode commit you want to pin.
+    # nix-cqcode.url = "github:dhnaranjo/nix-cqcode/FAKECOMMIT";
     nix-cqcode.inputs.nixpkgs.follows = "nixpkgs";
   };
 
