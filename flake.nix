@@ -185,7 +185,10 @@
             }) result.devShells;
         };
       templates.default = {
-        path = ./template;
+        path = builtins.path {
+          path = ./template;
+          name = "nix-cqcode-template";
+        };
         description = "CadQuery and build123d project with nix-cqcode dev shell";
         welcomeText = ''
           Initialized a CadQuery project template.
