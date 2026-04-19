@@ -87,6 +87,20 @@
                   {
                     "python.defaultInterpreterPath" = "${pythonEnv}/bin/python";
                     "python.useEnvironmentsExtension" = false;
+                    "terminal.integrated.defaultProfile.linux" = "nix-cqcode bash";
+                    "terminal.integrated.defaultProfile.osx" = "nix-cqcode bash";
+                    "terminal.integrated.profiles.linux" = {
+                      "nix-cqcode bash" = {
+                        path = "${pkgs.bash}/bin/bash";
+                        args = [ "-i" ];
+                      };
+                    };
+                    "terminal.integrated.profiles.osx" = {
+                      "nix-cqcode bash" = {
+                        path = "${pkgs.bash}/bin/bash";
+                        args = [ "-i" ];
+                      };
+                    };
                   }
                   // resolvedSettings
                 ));
@@ -98,7 +112,7 @@
                 ] ++ resolvedExtraPackages;
                 shellHook = ''
                   mkdir -p .vscode/user-data/User
-                  [ -e .vscode/user-data/User/settings.json ] || cp ${workspaceSettings} .vscode/user-data/User/settings.json
+                  [ -e .vscode/settings.json ] || cp ${workspaceSettings} .vscode/settings.json
                   chmod -R u+w .vscode
                   echo "Use 'cqcode' to launch VS Code with the CadQuery setup."
                 '' + resolvedShellHook;
