@@ -12,6 +12,12 @@ I use Nix, I like it. Getting CadQuery working on Nix is pretty complex on x86_6
 - A `cqcode` launcher that opens VS Code with https://github.com/bernhard-42/vscode-ocp-cad-viewer extension.
 - Project-local VS Code user data under `.vscode/user-data`, separate from your normal VS Code user profile
 
+Current pinned core package versions:
+
+- OCP `7.8.1.1.post1`
+- CadQuery `2.7.0`
+- build123d `0.10.0`
+
 ## Quick start
 
 Initialize a new modeling project from the flake template:
