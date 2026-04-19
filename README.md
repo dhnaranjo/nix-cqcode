@@ -10,7 +10,8 @@ I use Nix, I like it. Getting CadQuery working on Nix is pretty complex on x86_6
 
 - A pinned Python package set for CadQuery, build123d, and related dependencies
 - A `cqcode` launcher that opens VS Code with https://github.com/bernhard-42/vscode-ocp-cad-viewer extension.
-- Project-local VS Code user data under `.vscode/user-data`, separate from your normal VS Code user profile
+- Project-local VS Code workspace settings under `.vscode/settings.json`
+- Per-project VS Code runtime state under `$XDG_STATE_HOME/nix-cqcode` or `~/.local/state/nix-cqcode`, separate from your normal VS Code user profile
 
 Current pinned core package versions:
 
@@ -53,7 +54,9 @@ Then open `models/cube.py` in VS Code and run the file. The `show_object(...)` c
 
 `cqcode` launches this flake's `vscode-with-extensions` build, not your system VS Code.
 
-It stores VS Code user data in `.vscode/user-data`, separate from your normal user profile.
+Workspace settings stay in `.vscode/settings.json`.
+
+Runtime user data is stored outside the project tree in `$XDG_STATE_HOME/nix-cqcode` or `~/.local/state/nix-cqcode`, so transient sockets and lockfiles do not break `nix develop` in non-Git projects.
 
 ## Customization
 

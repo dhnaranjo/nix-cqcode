@@ -52,7 +52,9 @@
               in
               pkgs.writeShellScriptBin "cqcode" ''
                 project_root="$PWD"
-                user_data_dir="$project_root/.vscode/user-data"
+                state_root="''${XDG_STATE_HOME:-$HOME/.local/state}/nix-cqcode"
+                project_key="$(${pkgs.coreutils}/bin/printf '%s' "$project_root" | ${pkgs.coreutils}/bin/sha256sum | ${pkgs.gawk}/bin/awk '{print $1}')"
+                user_data_dir="$state_root/$project_key/user-data"
                 mkdir -p "$user_data_dir"
 
                 if [ "$#" -eq 0 ]; then
@@ -110,7 +112,7 @@
                   resolvedEditorPackage
                 ] ++ resolvedExtraPackages;
                 shellHook = ''
-                  mkdir -p .vscode/user-data/User
+                  mkdir -p .vscode
                   if [ -e .vscode/settings.json ]; then
                     tmp_settings="$(mktemp)"
                     ${pkgs.jq}/bin/jq -s '.[0] * .[1]' .vscode/settings.json ${workspaceSettings} > "$tmp_settings"
