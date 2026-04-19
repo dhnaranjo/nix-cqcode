@@ -26,7 +26,7 @@ let
     else if system == "x86_64-linux" then
       {
         url = "https://files.pythonhosted.org/packages/fa/3f/4b28aedbbb7c6cd5f1aa4e1d6e9a0f88d138941096a3d70f1878a406075f/cadquery_ocp-7.8.1.1.post1-cp312-cp312-manylinux_2_31_x86_64.whl";
-        hash = "sha256-SIIHToZyIghRNXm6ruJGvk+xC9oi3CDRAcQVHzZCB7k=";
+        hash = "sha256-SIIHToZyIggVNXm6ruJGvk+xC9oi3CDRAcQVHzZCB7k=";
         extensionSuffix = "x86_64-linux-gnu.so";
       }
     else
