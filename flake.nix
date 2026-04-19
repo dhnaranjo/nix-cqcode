@@ -160,5 +160,14 @@
               default = result.lib.${system}.mkCqcodeShell shellConfig;
             }) result.devShells;
         };
+      templates.default = {
+        path = ./template;
+        description = "CadQuery and build123d project with nix-cqcode dev shell";
+        welcomeText = ''
+          Initialized a CadQuery project template.
+
+          Run `nix develop`, then launch the editor with `cqcode .`.
+        '';
+      };
     };
 }
