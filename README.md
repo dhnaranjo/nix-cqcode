@@ -26,7 +26,7 @@ Then enter the shell and launch the editor:
 
 ```sh
 nix develop
-cqcode .
+cqcode
 ```
 
 The template creates a `flake.nix` wired to `nix-cqcode` and ignores `.vscode/`.

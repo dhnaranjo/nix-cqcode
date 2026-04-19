@@ -54,6 +54,10 @@
                 user_data_dir="$project_root/.vscode/user-data"
                 mkdir -p "$user_data_dir"
 
+                if [ "$#" -eq 0 ]; then
+                  set -- "$project_root"
+                fi
+
                 exec ${vscodeWithExtensions}/bin/code \
                   --user-data-dir "$user_data_dir" \
                   "$@"
@@ -96,6 +100,7 @@
                   mkdir -p .vscode/user-data/User
                   [ -e .vscode/user-data/User/settings.json ] || cp ${workspaceSettings} .vscode/user-data/User/settings.json
                   chmod -R u+w .vscode
+                  echo "Use 'cqcode' to launch VS Code with the CadQuery setup."
                 '' + resolvedShellHook;
               };
             packages = (import ./pkgs {
@@ -166,7 +171,7 @@
         welcomeText = ''
           Initialized a CadQuery project template.
 
-          Run `nix develop`, then launch the editor with `cqcode .`.
+          Run `nix develop`, then launch the editor with `cqcode`.
         '';
       };
     };
