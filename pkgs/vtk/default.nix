@@ -20,7 +20,7 @@ let
     else if system == "x86_64-linux" then
       {
         url = "https://files.pythonhosted.org/packages/01/ee/730d57c6d7353c1afb919ceedfac387a190ccb92e611c4b14f88e6f39066/vtk-${version}-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl";
-        hash = "sha256-9yi7YfQ/z4UNYiztOz1RszEW92hlyk5OB3b2JOLSMH0=";
+        hash = "sha256-9yi7YfQ/zoUNYiztOz1RsxFvdnaFyk5OAHb2JOLSMH0=";
       }
     else
       throw "vtk: unsupported system ${system}; add platform-specific wheel metadata";
