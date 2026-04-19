@@ -125,9 +125,9 @@
             }
           );
         };
-        devShells.default =
+        devShells =
           let
-            pythonEnv = python.buildEnv.override {
+            defaultPythonEnv = python.buildEnv.override {
               extraLibs = (ps: [
                 self.outputs.packages.${system}.cadquery
                 self.outputs.packages.${system}.build123d
@@ -136,11 +136,42 @@
               ]) python.pkgs;
               ignoreCollisions = true;
             };
+            vscodePythonEnv = python.buildEnv.override {
+              extraLibs = (ps: [
+                self.outputs.packages.${system}.cadquery
+                self.outputs.packages.${system}.ocp-vscode
+                ps.pip
+              ]) python.pkgs;
+              ignoreCollisions = true;
+            };
+            workspaceSettings = pkgs.writeText "settings.json" (builtins.toJSON {
+              "python.defaultInterpreterPath" = "${vscodePythonEnv}/bin/python";
+              "python.useEnvironmentsExtension" = false;
+            });
+            workspaceExtensions = pkgs.writeText "extensions.json" (builtins.toJSON {
+              recommendations = [
+                "ms-python.python"
+                "bernhard-42.ocp-cad-viewer"
+              ];
+            });
           in
-          pkgs.mkShell {
-            packages = [
-              pythonEnv
-            ];
+          {
+            default = pkgs.mkShell {
+              packages = [
+                defaultPythonEnv
+              ];
+            };
+            vscode = pkgs.mkShell {
+              packages = [
+                vscodePythonEnv
+              ];
+              shellHook = ''
+                mkdir -p .vscode
+                [ -e .vscode/settings.json ] || cp ${workspaceSettings} .vscode/settings.json
+                [ -e .vscode/extensions.json ] || cp ${workspaceExtensions} .vscode/extensions.json
+                chmod -R u+w .vscode
+              '';
+            };
           };
       }
     );
