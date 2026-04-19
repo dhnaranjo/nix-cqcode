@@ -12,8 +12,10 @@
       self,
     }:
     {
-      devShells = nixpkgs.lib.mapAttrs (_: shells: {
-        default = shells.vscode;
-      }) nix-cadquery.devShells;
+      devShells = nix-cadquery.lib.mkCqShell {
+        extraExtensions = { pkgs, ... }: [
+          pkgs.vscode-extensions.jnoortheen.nix-ide
+        ];
+      };
     };
 }
