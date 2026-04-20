@@ -15,9 +15,26 @@
     }:
     {
       devShells = nix-cqcode.lib.mkCqShell {
+        # Add Python packages to the default CadQuery environment.
+        extraPythonPackages = { python, packages, ... }: [
+          python.pkgs.numpy
+          # python.pkgs.scipy
+          # packages.build123d
+        ];
+
         extraExtensions = { pkgs, ... }: [
           pkgs.vscode-extensions.jnoortheen.nix-ide
         ];
+
+        # Standard mkShell options are passed through as well.
+        extraPackages = { pkgs, ... }: [
+          pkgs.git
+          # pkgs.ruff
+        ];
+
+        shellHook = ''
+          echo "CadQuery workspace ready."
+        '';
       };
     };
 }
