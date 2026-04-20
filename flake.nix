@@ -136,6 +136,8 @@
               vscodeExtPublisher = "bernhard-42";
               vscodeExtName = "ocp-cad-viewer";
               vscodeExtUniqueId = "bernhard-42.ocp-cad-viewer";
+              nativeBuildInputs = [ pkgs.unzip ];
+              unpackCmd = "${pkgs.unzip}/bin/unzip -qq \"$curSrc\"";
               src = pkgs.fetchurl {
                 url = "https://github.com/bernhard-42/vscode-ocp-cad-viewer/releases/download/v${ocpCadViewerVersion}/ocp-cad-viewer-${ocpCadViewerVersion}.vsix";
                 hash = "sha256-RkG3Hr4GFiHoeuz4s93lU2NS72aDaEH/P3fYYyfKYSo=";
